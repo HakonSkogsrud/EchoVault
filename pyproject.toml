@@ -3,6 +3,7 @@ name = "EchoVault"
 version = "0.1.0"
 description = "Music history answering agent."
 requires-python = ">=3.12,<3.14"
+readme = "README.md"
 dependencies = [
     "langchain",
     "ipykernel",
@@ -14,9 +15,42 @@ dependencies = [
     "fastmcp",
     "langchain-mcp-adapters",
     "fastparquet",
+    "ruff>=0.14.10",
+    "mypy>=1.19.1",
+    "pre-commit>=4.5.1",
 ]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 100
+
+lint.ignore = [
+    "E501",  # Checks for lines that exceed the specified maximum character length.
+    "PD901",  # Checks for assignments to the variable df.
+]
+
+lint.select = [
+    "I",  # Import conventions
+    "E",  # Errors
+    "F",  # Failures
+    "B",  # Bugbear
+    "UP",  # Python 3 porting issues
+    "W",  # Warnings
+    "PD",  # Pandas-specific linting
+    "FAST",  # FastAPI-specific linting
+    "SIM",  # Simplifications
+    "C4",  # C4-specific linting
+    "N",  # Naming conventions
+    "TID",  # Type inference and declaration
+    "ARG",  # Argument-related linting
+    "R",  # Refactoring suggestions
+    "C",  # Complexity
+    "PIE"  # Pytest-specific linting
+]
+
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
-
