@@ -1,0 +1,22 @@
+[project]
+name = "EchoVault"
+version = "0.1.0"
+description = "Music history answering agent."
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "langchain",
+    "ipykernel",
+    "jupyter",
+    "pandas",
+    "chainlit",
+    "langchain-google-genai",
+    "python-dotenv",
+    "fastmcp",
+    "langchain-mcp-adapters",
+    "fastparquet",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+

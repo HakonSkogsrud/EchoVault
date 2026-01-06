@@ -1,0 +1,7 @@
+.venv
+.chainlit
+__pycache__
+*egg-info
+.DS_Store
+*.parquet
+.env
