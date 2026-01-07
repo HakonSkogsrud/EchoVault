@@ -19,6 +19,9 @@ dependencies = [
     "mypy",
     "pre-commit",
     "duckdb",
+    "matplotlib>=3.7.0",
+    "langchain-experimental>=0.0.47",
+    "tabulate>=0.9.0",
 ]
 
 [tool.setuptools.packages.find]

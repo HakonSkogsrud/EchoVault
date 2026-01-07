@@ -32,7 +32,8 @@ def _execute_query(dataset_key: str, sql: str) -> str:
         conn = duckdb.connect(":memory:")
         conn.execute(f"CREATE VIEW {dataset['view_name']} AS SELECT * FROM '{dataset['path']}'")
         result = conn.execute(sql).df()
-        return result.to_string()
+        # Return both string representation and CSV for easier parsing
+        return result.to_csv(index=False)
     except Exception as e:
         return f"Error: {str(e)}"
 
