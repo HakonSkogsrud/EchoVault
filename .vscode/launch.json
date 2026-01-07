@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Chainlit Frontend",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "chainlit.cli",
+      "args": ["run", "src/frontend.py"],
+      "jinja": true,
+      "justMyCode": true
+    }
+  ]
+}

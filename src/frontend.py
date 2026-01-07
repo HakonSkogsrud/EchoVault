@@ -1,4 +1,6 @@
+import json
 import uuid
+from dataclasses import dataclass
 
 import chainlit as cl
 
@@ -14,24 +16,53 @@ async def start_chat() -> None:
     cl.user_session.set("agent", agent)
 
 
+@dataclass
+class Context:
+    MODEL = "model"
+    TOOL = "tools"
+
+
 @cl.on_message
 async def main(message: cl.Message) -> None:
-    final_answer = cl.Message(content="")
-    await final_answer.send()
-
     user_input = {"messages": [{"role": "user", "content": message.content}]}
     thread_id = cl.user_session.get("thread_id")
     agent = cl.user_session.get("agent")
 
-    async for msg, metadata in agent.astream(
-        user_input, {"configurable": {"thread_id": thread_id}}, stream_mode="messages"
+    async for chunk in agent.astream(
+        user_input, {"configurable": {"thread_id": thread_id}}, stream_mode="updates"
     ):
-        if metadata.get("langgraph_node") == "model" and msg.content:
-            if isinstance(msg.content, list):
-                text = "".join(
-                    block.get("text", "") for block in msg.content if block.get("type") == "text"
-                )
-                final_answer.content += text
+        if Context.MODEL in chunk:
+            if is_tool_call(chunk):
+                tool_name = extract_tool_name(chunk)
+                async with cl.Step(name=tool_name, language="sql") as step:
+                    step.output = extract_sql_query(chunk)
+
             else:
-                final_answer.content += msg.content
-            await final_answer.update()
+                answer = extract_output(chunk, Context.MODEL)
+                final_answer = cl.Message(content=answer)
+                await final_answer.send()
+
+        if Context.TOOL in chunk:
+            async with cl.Step(name="test", type="retrieval") as step:
+                step.output = extract_output(chunk, Context.TOOL)
+
+
+def extract_output(chunk: dict, context: str) -> str:
+    return chunk[context]["messages"][-1].content[-1]["text"]
+
+
+def extract_tool_name(chunk: dict) -> str:
+    return chunk["model"]["messages"][-1].additional_kwargs["function_call"]["name"]
+
+
+def extract_sql_query(chunk: dict) -> str:
+    query_dict_str = chunk["model"]["messages"][-1].additional_kwargs["function_call"]["arguments"]
+    query_dict = json.loads(query_dict_str)
+    return query_dict["sql"]
+
+
+def is_tool_call(chunk: dict) -> bool:
+    model = chunk["model"]
+    if model["messages"][-1].content:
+        return False
+    return True
