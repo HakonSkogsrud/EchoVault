@@ -13,8 +13,6 @@ async def start_chat() -> None:
     agent = await get_agent()
     cl.user_session.set("agent", agent)
 
-    # await cl.Message(content="Hva kan jeg hjelpe deg med?").send()
-
 
 @cl.on_message
 async def main(message: cl.Message) -> None:
@@ -25,10 +23,9 @@ async def main(message: cl.Message) -> None:
     thread_id = cl.user_session.get("thread_id")
     agent = cl.user_session.get("agent")
 
-    async for chunk in agent.astream(
+    async for msg, metadata in agent.astream(
         user_input, {"configurable": {"thread_id": thread_id}}, stream_mode="messages"
     ):
-        msg, metadata = chunk
         if metadata.get("langgraph_node") == "model" and msg.content:
             if isinstance(msg.content, list):
                 text = "".join(

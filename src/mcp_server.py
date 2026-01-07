@@ -6,9 +6,12 @@ from fastmcp import FastMCP
 mcp = FastMCP("EchoVault")
 
 PARQUET_PATH_MUSIC = os.path.join(os.path.dirname(__file__), "..", "data", "music_history.parquet")
-PARQUET_PATH_YOUTUBE = os.path.join(os.path.dirname(__file__), "..", "data", "youtube_history.parquet")
-PARQUET_PATH_SUBSCRIPTIONS = os.path.join(os.path.dirname(__file__), "..", "data", "subscriptions.parquet")
-
+PARQUET_PATH_YOUTUBE = os.path.join(
+    os.path.dirname(__file__), "..", "data", "youtube_history.parquet"
+)
+PARQUET_PATH_SUBSCRIPTIONS = os.path.join(
+    os.path.dirname(__file__), "..", "data", "subscriptions.parquet"
+)
 
 
 @mcp.tool()
@@ -25,11 +28,12 @@ def query_music_history(sql: str) -> str:
         return result.to_string()
     except Exception as e:
         return f"Error: {str(e)}"
-    
+
+
 @mcp.tool()
 def query_youtube_history(sql: str) -> str:
     """Execute a SQL query against the database containing musiyoutube watch history.
-        Be aware that channel names changes over time, so use channel_id as channel aggregation column. 
+        Be aware that channel names changes over time, so use channel_id as channel aggregation column.
     Args:
         sql: SQL query to execute. Use 'youtube_history' as the table name.
     """
@@ -40,6 +44,7 @@ def query_youtube_history(sql: str) -> str:
         return result.to_string()
     except Exception as e:
         return f"Error: {str(e)}"
+
 
 @mcp.tool()
 def query_youtube_subscriptions(sql: str) -> str:
