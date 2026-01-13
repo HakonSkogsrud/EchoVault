@@ -63,6 +63,4 @@ def extract_sql_query(chunk: dict) -> str:
 
 def is_tool_call(chunk: dict) -> bool:
     model = chunk["model"]
-    if model["messages"][-1].content:
-        return False
-    return True
+    return not model["messages"][-1].content

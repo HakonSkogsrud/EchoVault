@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+MAX_MESSAGE_HISTORY = 10
+
 
 @dataclass
 class ModelConfig:
