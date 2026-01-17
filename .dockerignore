@@ -1,0 +1,12 @@
+.venv
+.chainlit
+.vscode
+notebooks/
+.git
+.github
+__pycache__
+*.py[cod]
+*.egg-info
+EchoVault.egg-info/
+*.md
+!README.md

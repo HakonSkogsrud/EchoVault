@@ -17,6 +17,6 @@ async def get_agent() -> CompiledStateGraph:
         model=get_model(),
         tools=tools,
         system_prompt=system_prompt,
-        middleware=[trim_history],
+        #       middleware=[trim_history],
         checkpointer=InMemorySaver(),
     )

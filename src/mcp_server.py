@@ -2,6 +2,7 @@ import os
 
 import duckdb
 from fastmcp import FastMCP
+from datetime import datetime
 
 mcp = FastMCP("EchoVault")
 
@@ -36,6 +37,11 @@ def _execute_query(dataset_key: str, sql: str) -> str:
     except Exception as e:
         return f"Error: {str(e)}"
 
+
+@mcp.tool()
+def get_todays_date() -> str:
+    """ Gets todays date. """
+    return str(datetime.now())
 
 @mcp.tool()
 def query_music_history(sql: str) -> str:

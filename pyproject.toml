@@ -6,19 +6,24 @@ requires-python = ">=3.12,<3.14"
 readme = "README.md"
 dependencies = [
     "langchain",
-    "ipykernel",
-    "jupyter",
-    "pandas",
     "chainlit",
     "langchain-google-genai",
     "python-dotenv",
     "fastmcp",
     "langchain-mcp-adapters",
+    "duckdb",
+    "numpy",
+    "pandas",
+]
+
+[project.optional-dependencies]
+dev = [
+    "jupyter",
+    "pre-commit",
+    "ipykernel",
     "fastparquet",
     "ruff",
     "mypy",
-    "pre-commit",
-    "duckdb",
 ]
 
 [tool.setuptools.packages.find]

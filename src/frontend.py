@@ -34,8 +34,10 @@ async def main(message: cl.Message) -> None:
         if Context.MODEL in chunk:
             if is_tool_call(chunk):
                 tool_name = extract_tool_name(chunk)
-                async with cl.Step(name=tool_name, language="sql") as step:
-                    step.output = extract_sql_query(chunk)
+                query = extract_sql_query(chunk)
+                if query:
+                    async with cl.Step(name=tool_name, language="sql") as step:
+                        step.output = extract_sql_query(chunk)
 
             else:
                 answer = extract_output(chunk, Context.MODEL)
@@ -43,7 +45,7 @@ async def main(message: cl.Message) -> None:
                 await final_answer.send()
 
         if Context.TOOL in chunk:
-            async with cl.Step(name="test", type="retrieval") as step:
+            async with cl.Step(name="Tool output", type="retrieval") as step:
                 step.output = extract_output(chunk, Context.TOOL)
 
 
@@ -55,11 +57,12 @@ def extract_tool_name(chunk: dict) -> str:
     return chunk["model"]["messages"][-1].additional_kwargs["function_call"]["name"]
 
 
-def extract_sql_query(chunk: dict) -> str:
+def extract_sql_query(chunk: dict) -> str | None:
     query_dict_str = chunk["model"]["messages"][-1].additional_kwargs["function_call"]["arguments"]
     query_dict = json.loads(query_dict_str)
-    return query_dict["sql"]
-
+    if query_dict:
+        return query_dict["sql"]
+    return None
 
 def is_tool_call(chunk: dict) -> bool:
     model = chunk["model"]
