@@ -1,25 +1,28 @@
 import os
+from datetime import datetime
 
 import duckdb
 from fastmcp import FastMCP
-from datetime import datetime
 
 mcp = FastMCP("EchoVault")
 
 # Dataset configuration
+# Use /data for containerized deployments, fall back to relative path for local development
+DATA_DIR = os.environ.get("DATA_DIR", os.path.join(os.path.dirname(__file__), "..", "data"))
+
 DATASETS = {
     "music_history": {
-        "path": os.path.join(os.path.dirname(__file__), "..", "data", "music_history.parquet"),
+        "path": os.path.join(DATA_DIR, "music_history.parquet"),
         "view_name": "music_history",
         "table_name": "music_history",
     },
     "youtube_history": {
-        "path": os.path.join(os.path.dirname(__file__), "..", "data", "youtube_history.parquet"),
+        "path": os.path.join(DATA_DIR, "youtube_history.parquet"),
         "view_name": "youtube_history",
         "table_name": "youtube_history",
     },
     "subscriptions": {
-        "path": os.path.join(os.path.dirname(__file__), "..", "data", "subscriptions.parquet"),
+        "path": os.path.join(DATA_DIR, "subscriptions.parquet"),
         "view_name": "subscriptions",
         "table_name": "subscriptions",
     },
@@ -40,8 +43,9 @@ def _execute_query(dataset_key: str, sql: str) -> str:
 
 @mcp.tool()
 def get_todays_date() -> str:
-    """ Gets todays date. """
+    """Gets todays date."""
     return str(datetime.now())
+
 
 @mcp.tool()
 def query_music_history(sql: str) -> str:
