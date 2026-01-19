@@ -60,7 +60,7 @@ def extract_tool_name(chunk: dict) -> str:
 def extract_sql_query(chunk: dict) -> str | None:
     query_dict_str = chunk["model"]["messages"][-1].additional_kwargs["function_call"]["arguments"]
     query_dict = json.loads(query_dict_str)
-    if query_dict:
+    if query_dict.get("sql"):
         return query_dict["sql"]
     return None
 
