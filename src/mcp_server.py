@@ -16,6 +16,7 @@ When writing DuckDB queries, strictly follow these rules:
 - No Backticks: Use double quotes (") for column names with spaces or special characters (standard SQL syntax).
 - No MySQLisms: Avoid MySQL-specific syntax; prioritize PostgreSQL/Standard SQL compatibility.
 - Modern SQL: Use the IN operator instead of multiple OR statements for the same column when possible.
+- Case-Insensitive Comparisons: Always convert both sides of string comparisons to lowercase using LOWER() to ensure case-insensitive matching (e.g., LOWER("Activity Type") = LOWER('running')).
 """
 
 
@@ -141,8 +142,8 @@ def query_activities(sql: str) -> str:
         - And more...
 
     Example queries:
-        SELECT COUNT(*) FROM activities WHERE "Activity Type" = 'Running' AND strftime('%Y', "Date") = '2025'
-        SELECT "Distance", "Date" FROM activities WHERE "Activity Type" = 'Cycling' LIMIT 10
+        SELECT COUNT(*) FROM activities WHERE LOWER("Activity Type") = LOWER('Running') AND strftime('%Y', "Date") = '2025'
+        SELECT "Distance", "Date" FROM activities WHERE LOWER("Activity Type") = LOWER('Cycling') LIMIT 10
         SELECT "Activity Type", COUNT(*) as count FROM activities GROUP BY "Activity Type"
 
     Args:
